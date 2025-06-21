@@ -205,22 +205,22 @@ body {
     align-items: center;
 }
 
-.hero-placeholder {
-    width: 300px;
-    height: 300px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    animation: float 6s ease-in-out infinite;
-    color: var(--primary-yellow);
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+.hero-image img:hover {
+    transform: scale(1.02);
+}
+
+.hero-placeholder {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
 }
 
 /* Quick Stats Section */
