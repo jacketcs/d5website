@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berkeley District 5 - City Council</title>
+    <meta name="description" content="Stay informed about Berkeley District 5. Learn about city council meetings, local businesses, and community issues.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-container">
+                    <img src="ginkgo-leaf.png" alt="Ginkgo Leaf Logo" class="logo-image">
+                    <h2>Berkeley District 5</h2>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#calendar" class="nav-link">Council Calendar</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#spotlight" class="nav-link">Local Spotlight</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#community" class="nav-link">Community Voice</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#news" class="nav-link">City News</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Berkeley District 5</h1>
+                <p class="hero-subtitle">Your voice matters. Stay informed about city council meetings, local issues, and community events in your district.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('calendar')">View Council Calendar</button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('contact')">Share Your Thoughts</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-placeholder">
+                    <i class="fas fa-leaf"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats Section -->
+    <section class="quick-stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Next Meeting</h3>
+                    <p>Tuesday, Dec 12</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-comments"></i>
+                    <h3>Community Ideas</h3>
+                    <p>47 Submitted</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>Recent Updates</h3>
+                    <p>12 This Month</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Council Calendar Section -->
+    <section id="calendar" class="calendar-section">
+        <div class="container">
+            <h2 class="section-title">Council Calendar</h2>
+            <p class="section-subtitle">Stay up to date with upcoming city council meetings and important dates</p>
+            
+            <div class="calendar-container">
+                <div class="calendar-filters">
+                    <button class="filter-btn active" data-filter="all">All Events</button>
+                    <button class="filter-btn" data-filter="council">Council Meetings</button>
+                    <button class="filter-btn" data-filter="committee">Committee Meetings</button>
+                    <button class="filter-btn" data-filter="community">Community Events</button>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-item" data-category="council">
+                        <div class="calendar-date">
+                            <span class="day">12</span>
+                            <span class="month">Dec</span>
+                        </div>
+                        <div class="calendar-content">
+                            <h3>Regular City Council Meeting</h3>
+                            <p class="time"><i class="fas fa-clock"></i> 6:00 PM - 9:00 PM</p>
+                            <p class="location"><i class="fas fa-map-marker-alt"></i> City Hall, 2180 Milvia Street</p>
+                            <div class="calendar-summary">
+                                <p>Agenda includes: Housing policy updates, budget review, and public comment on local development projects.</p>
+                                <button class="expand-btn" onclick="toggleExpand(this)">View Full Agenda</button>
+                                <div class="expanded-content">
+                                    <h4>Full Agenda:</h4>
+                                    <ul>
+                                        <li>Public Comment (30 minutes)</li>
+                                        <li>Housing Policy Amendment #2023-12</li>
+                                        <li>Budget Review for Q4 2023</li>
+                                        <li>Development Project: 1234 Telegraph Ave</li>
+                                        <li>Committee Reports</li>
+                                    </ul>
+                                    <a href="#" class="btn btn-primary">Join Meeting</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-item" data-category="committee">
+                        <div class="calendar-date">
+                            <span class="day">15</span>
+                            <span class="month">Dec</span>
+                        </div>
+                        <div class="calendar-content">
+                            <h3>Planning Commission Meeting</h3>
+                            <p class="time"><i class="fas fa-clock"></i> 7:00 PM - 8:30 PM</p>
+                            <p class="location"><i class="fas fa-map-marker-alt"></i> Virtual Meeting</p>
+                            <div class="calendar-summary">
+                                <p>Discussion of new zoning regulations and development proposals in District 5.</p>
+                                <button class="expand-btn" onclick="toggleExpand(this)">View Details</button>
+                                <div class="expanded-content">
+                                    <h4>Meeting Topics:</h4>
+                                    <ul>
+                                        <li>Zoning Code Updates</li>
+                                        <li>Development Proposals Review</li>
+                                        <li>Public Input Session</li>
+                                    </ul>
+                                    <a href="#" class="btn btn-primary">Join Meeting</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-item" data-category="community">
+                        <div class="calendar-date">
+                            <span class="day">18</span>
+                            <span class="month">Dec</span>
+                        </div>
+                        <div class="calendar-content">
+                            <h3>District 5 Community Forum</h3>
+                            <p class="time"><i class="fas fa-clock"></i> 2:00 PM - 4:00 PM</p>
+                            <p class="location"><i class="fas fa-map-marker-alt"></i> North Berkeley Senior Center</p>
+                            <div class="calendar-summary">
+                                <p>Open forum for District 5 residents to discuss local concerns and ideas.</p>
+                                <button class="expand-btn" onclick="toggleExpand(this)">View Details</button>
+                                <div class="expanded-content">
+                                    <h4>Forum Topics:</h4>
+                                    <ul>
+                                        <li>Neighborhood Safety</li>
+                                        <li>Local Business Support</li>
+                                        <li>Infrastructure Improvements</li>
+                                        <li>Open Discussion</li>
+                                    </ul>
+                                    <a href="#" class="btn btn-primary">RSVP</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Local Spotlight Section -->
+    <section id="spotlight" class="spotlight-section">
+        <div class="container">
+            <h2 class="section-title">Local Business Spotlight</h2>
+            <p class="section-subtitle">Supporting and celebrating the amazing businesses in District 5</p>
+            
+            <div class="spotlight-grid">
+                <div class="spotlight-card">
+                    <div class="spotlight-image">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div class="spotlight-content">
+                        <h3>North Berkeley Coffee Co.</h3>
+                        <p class="spotlight-tag">Coffee & Community</p>
+                        <p class="spotlight-description">A beloved local coffee shop serving organic, fair-trade coffee and hosting community events.</p>
+                        <button class="expand-btn" onclick="toggleExpand(this)">Learn More</button>
+                        <div class="expanded-content">
+                            <p><strong>Location:</strong> 1234 Shattuck Ave</p>
+                            <p><strong>Hours:</strong> 7AM - 6PM Daily</p>
+                            <p><strong>Special:</strong> Free community meeting space available for local groups</p>
+                            <p><strong>Owner:</strong> Maria Rodriguez, District 5 resident since 2010</p>
+                            <a href="#" class="btn btn-secondary">Visit Website</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <div class="spotlight-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="spotlight-content">
+                        <h3>Berkeley Books & More</h3>
+                        <p class="spotlight-tag">Independent Bookstore</p>
+                        <p class="spotlight-description">Family-owned bookstore specializing in local authors and community-focused literature.</p>
+                        <button class="expand-btn" onclick="toggleExpand(this)">Learn More</button>
+                        <div class="expanded-content">
+                            <p><strong>Location:</strong> 567 Telegraph Ave</p>
+                            <p><strong>Hours:</strong> 10AM - 8PM Daily</p>
+                            <p><strong>Special:</strong> Weekly reading groups and author events</p>
+                            <p><strong>Owner:</strong> James Chen, former UC Berkeley professor</p>
+                            <a href="#" class="btn btn-secondary">Visit Website</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Voice Section -->
+    <section id="community" class="community-section">
+        <div class="container">
+            <h2 class="section-title">Community Voice</h2>
+            <p class="section-subtitle">Ideas and feedback from District 5 residents</p>
+            
+            <div class="community-grid">
+                <div class="community-card">
+                    <div class="community-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <span class="idea-tag">New Idea</span>
+                    </div>
+                    <blockquote>
+                        "We need more bike lanes on College Avenue. The current setup is dangerous for cyclists and pedestrians."
+                    </blockquote>
+                    <div class="community-meta">
+                        <span class="author">- Sarah M., North Berkeley</span>
+                        <span class="votes">👍 23 votes</span>
+                    </div>
+                    <button class="expand-btn" onclick="toggleExpand(this)">View Discussion</button>
+                    <div class="expanded-content">
+                        <h4>Discussion:</h4>
+                        <div class="discussion-thread">
+                            <p><strong>Council Response:</strong> "This is a priority for our transportation committee. We're reviewing the College Ave corridor plan."</p>
+                            <p><strong>Follow-up:</strong> Planning meeting scheduled for January 15th.</p>
+                        </div>
+                        <button class="btn btn-primary">Add Your Comment</button>
+                    </div>
+                </div>
+
+                <div class="community-card">
+                    <div class="community-header">
+                        <i class="fas fa-heart"></i>
+                        <span class="idea-tag">Community Support</span>
+                    </div>
+                    <blockquote>
+                        "The new community garden on Sacramento Street has been amazing for our neighborhood. Thank you for supporting this project!"
+                    </blockquote>
+                    <div class="community-meta">
+                        <span class="author">- David L., Elmwood</span>
+                        <span class="votes">👍 45 votes</span>
+                    </div>
+                    <button class="expand-btn" onclick="toggleExpand(this)">View Details</button>
+                    <div class="expanded-content">
+                        <h4>Project Details:</h4>
+                        <p>The Sacramento Street Community Garden opened in September 2023 with 20 plots for local residents.</p>
+                        <p><strong>Next Steps:</strong> Planning for expansion and adding a children's garden area.</p>
+                        <button class="btn btn-primary">Join Garden Committee</button>
+                    </div>
+                </div>
+
+                <div class="community-card">
+                    <div class="community-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span class="idea-tag">Concern</span>
+                    </div>
+                    <blockquote>
+                        "Street lighting on the west side of District 5 needs improvement. Several areas are too dark at night."
+                    </blockquote>
+                    <div class="community-meta">
+                        <span class="author">- Jennifer K., West Berkeley</span>
+                        <span class="votes">👍 31 votes</span>
+                    </div>
+                    <button class="expand-btn" onclick="toggleExpand(this)">View Status</button>
+                    <div class="expanded-content">
+                        <h4>Status Update:</h4>
+                        <p><strong>In Progress:</strong> Lighting assessment completed. New LED fixtures ordered.</p>
+                        <p><strong>Timeline:</strong> Installation scheduled for February 2024.</p>
+                        <p><strong>Budget:</strong> $45,000 allocated from infrastructure fund.</p>
+                        <button class="btn btn-primary">Report Specific Locations</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="community-cta">
+                <h3>Share Your Ideas</h3>
+                <p>Have a suggestion for improving District 5? We want to hear from you!</p>
+                <button class="btn btn-primary" onclick="scrollToSection('contact')">Submit Your Idea</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- City News Section -->
+    <section id="news" class="news-section">
+        <div class="container">
+            <h2 class="section-title">City News & Updates</h2>
+            <p class="section-subtitle">Latest news and important updates from Berkeley City Hall</p>
+            
+            <div class="news-grid">
+                <article class="news-card featured">
+                    <div class="news-image">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-tag">Featured</span>
+                        <h3>New Housing Policy Approved</h3>
+                        <p class="news-excerpt">City Council unanimously approved new affordable housing measures that will create 500 new units across Berkeley.</p>
+                        <div class="news-meta">
+                            <span class="date">December 8, 2023</span>
+                            <span class="read-time">3 min read</span>
+                        </div>
+                        <button class="expand-btn" onclick="toggleExpand(this)">Read Full Article</button>
+                        <div class="expanded-content">
+                            <p>The new housing policy includes:</p>
+                            <ul>
+                                <li>Incentives for developers to include affordable units</li>
+                                <li>Streamlined permitting process for ADUs</li>
+                                <li>New tenant protection measures</li>
+                                <li>Community land trust funding</li>
+                            </ul>
+                            <p><strong>Impact on District 5:</strong> Expected to create 75 new affordable units in our district over the next two years.</p>
+                            <a href="#" class="btn btn-primary">Read Full Policy</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-tag">Environment</span>
+                        <h3>Climate Action Plan Update</h3>
+                        <p class="news-excerpt">Berkeley's updated Climate Action Plan sets ambitious goals for carbon neutrality by 2035.</p>
+                        <div class="news-meta">
+                            <span class="date">December 5, 2023</span>
+                            <span class="read-time">2 min read</span>
+                        </div>
+                        <button class="expand-btn" onclick="toggleExpand(this)">Read More</button>
+                        <div class="expanded-content">
+                            <p>Key initiatives include:</p>
+                            <ul>
+                                <li>100% renewable energy for city operations</li>
+                                <li>Expanded public transportation</li>
+                                <li>Green building requirements</li>
+                                <li>Community solar programs</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">View Full Plan</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-tag">Education</span>
+                        <h3>School District Partnership</h3>
+                        <p class="news-excerpt">New partnership between Berkeley Unified School District and City Hall to improve after-school programs.</p>
+                        <div class="news-meta">
+                            <span class="date">December 3, 2023</span>
+                            <span class="read-time">2 min read</span>
+                        </div>
+                        <button class="expand-btn" onclick="toggleExpand(this)">Read More</button>
+                        <div class="expanded-content">
+                            <p>Partnership includes:</p>
+                            <ul>
+                                <li>Expanded after-school activities</li>
+                                <li>Community center access for students</li>
+                                <li>Joint funding for educational programs</li>
+                                <li>Parent engagement initiatives</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Have questions, ideas, or concerns? I'm here to listen and help.</p>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Your District 5 Council Member</h3>
+                    <p>I'm committed to making our government more accessible and responsive to your needs. Whether you have a question about city services, want to share an idea for improving our district, or need help with a local issue, I'm here to help.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>district5@berkeleyca.gov</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>(510) 981-7150</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Office Hours</h4>
+                                <p>Tuesdays 2-5 PM<br>City Hall, Room 218</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic">Topic</label>
+                        <select id="topic" name="topic">
+                            <option value="">Select a topic</option>
+                            <option value="idea">Share an idea</option>
+                            <option value="concern">Report a concern</option>
+                            <option value="question">Ask a question</option>
+                            <option value="meeting">Request a meeting</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Tell me what's on your mind..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-leaf logo-icon"></i>
+                        <h3>Berkeley District 5</h3>
+                    </div>
+                    <p>Making government more accessible and transparent for District 5 residents.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#calendar">Council Calendar</a></li>
+                        <li><a href="#spotlight">Local Businesses</a></li>
+                        <li><a href="#community">Community Voice</a></li>
+                        <li><a href="#news">City News</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>City Resources</h4>
+                    <ul>
+                        <li><a href="#">Berkeley City Website</a></li>
+                        <li><a href="#">311 Service Requests</a></li>
+                        <li><a href="#">Emergency Alerts</a></li>
+                        <li><a href="#">Voter Information</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Stay Connected</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Berkeley District 5. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Accessibility</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
