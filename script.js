@@ -73,32 +73,222 @@ function toggleExpand(button) {
     }
 }
 
-// Calendar filtering functionality
+// Calendar filtering and meeting fetching
 document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const calendarItems = document.querySelectorAll('.calendar-item');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const filter = button.getAttribute('data-filter');
+    fetchCouncilMeetings();
+
+    // The old filter logic is removed as the calendar is now populated dynamically.
+});
+
+// Function to fetch and display council meetings
+async function fetchCouncilMeetings() {
+    const calendarGrid = document.querySelector('.calendar-grid');
+    if (!calendarGrid) return;
+
+    calendarGrid.innerHTML = '<p class="loading-message" style="text-align: center; width: 100%;">Loading upcoming meetings...</p>';
+
+    // Try multiple CORS proxies in case one fails
+    const proxyUrls = [
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.allorigins.win/raw?url=',
+        'https://thingproxy.freeboard.io/fetch/'
+    ];
+
+    const targetUrl = 'https://berkeleyca.gov/your-government/city-council/city-council-agendas';
+    let success = false;
+
+    for (let i = 0; i < proxyUrls.length && !success; i++) {
+        try {
+            const proxyUrl = proxyUrls[i];
+            const fullUrl = proxyUrl + (proxyUrl.includes('allorigins') ? encodeURIComponent(targetUrl) : targetUrl);
             
-            // Update active button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+            console.log(`Trying proxy ${i + 1}: ${proxyUrl}`);
             
-            // Filter calendar items
-            calendarItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                if (filter === 'all' || category === filter) {
-                    item.style.display = 'grid';
-                    item.style.animation = 'fadeInUp 0.6s ease-out';
-                } else {
-                    item.style.display = 'none';
+            const response = await fetch(fullUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
                 }
             });
-        });
-    });
-});
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const html = await response.text();
+            
+            // Check if we got actual HTML content
+            if (!html.includes('<html') && !html.includes('table')) {
+                throw new Error('Invalid HTML content received');
+            }
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Try different selectors for the meeting table
+            const tableSelectors = [
+                'table.views-table tbody tr',
+                'table tbody tr',
+                '.views-table tbody tr',
+                'tr'
+            ];
+
+            let meetingRows = [];
+            for (const selector of tableSelectors) {
+                meetingRows = doc.querySelectorAll(selector);
+                if (meetingRows.length > 0) {
+                    console.log(`Found ${meetingRows.length} rows with selector: ${selector}`);
+                    break;
+                }
+            }
+
+            let meetingsHtml = '';
+            let meetingCount = 0;
+
+            meetingRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 2) return;
+
+                const titleElement = cells[0].querySelector('a');
+                const title = titleElement ? titleElement.textContent.trim() : cells[0].textContent.trim();
+                
+                const dateStr = cells[1].textContent.trim();
+
+                // Look for agenda links in all columns, not just the third one
+                let agendaLinkElement = null;
+                let agendaUrl = '#';
+                
+                // First, try to find HTML agenda links
+                for (let i = 0; i < cells.length; i++) {
+                    const htmlLink = cells[i].querySelector('a[href*="html" i]');
+                    if (htmlLink) {
+                        agendaLinkElement = htmlLink;
+                        break;
+                    }
+                }
+                
+                // If no HTML link found, look for any agenda-related link
+                if (!agendaLinkElement) {
+                    for (let i = 0; i < cells.length; i++) {
+                        const anyLink = cells[i].querySelector('a');
+                        if (anyLink && (anyLink.textContent.toLowerCase().includes('agenda') || 
+                                       anyLink.getAttribute('href').toLowerCase().includes('agenda'))) {
+                            agendaLinkElement = anyLink;
+                            break;
+                        }
+                    }
+                }
+                
+                // If still no agenda link, look for any link that might be an agenda
+                if (!agendaLinkElement) {
+                    for (let i = 0; i < cells.length; i++) {
+                        const anyLink = cells[i].querySelector('a');
+                        if (anyLink && anyLink.getAttribute('href')) {
+                            agendaLinkElement = anyLink;
+                            break;
+                        }
+                    }
+                }
+
+                // Construct the agenda URL
+                if (agendaLinkElement) {
+                    const href = agendaLinkElement.getAttribute('href');
+                    if (href) {
+                        if (href.startsWith('http')) {
+                            agendaUrl = href;
+                        } else if (href.startsWith('/')) {
+                            agendaUrl = `https://berkeleyca.gov${href}`;
+                        } else {
+                            agendaUrl = `https://berkeleyca.gov/${href}`;
+                        }
+                        console.log(`Found agenda link: ${agendaUrl}`);
+                    }
+                }
+
+                if (title && dateStr) {
+                    // Parse the date string (format: MM/DD/YYYY - HH:MM AM/PM)
+                    const dateMatch = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                    if (dateMatch) {
+                        const [, month, day, year] = dateMatch;
+                        const monthName = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`).toLocaleString('en-US', { month: 'short' });
+                        
+                        // Extract time if available
+                        const timeMatch = dateStr.match(/- (.+)$/);
+                        const time = timeMatch ? timeMatch[1].trim() : 'Time TBD';
+
+                        meetingsHtml += `
+                            <div class="calendar-item" data-category="council">
+                                <div class="calendar-date">
+                                    <span class="day">${day}</span>
+                                    <span class="month">${monthName}</span>
+                                </div>
+                                <div class="calendar-content">
+                                    <h3>${title}</h3>
+                                    <p class="time"><i class="fas fa-clock"></i> ${time}</p>
+                                    <div class="calendar-summary">
+                                        ${agendaUrl !== '#' ? `<a href="${agendaUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Agenda</a>` : '<span class="btn btn-secondary">Agenda TBD</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        meetingCount++;
+                    }
+                }
+            });
+
+            if (meetingCount > 0) {
+                calendarGrid.innerHTML = meetingsHtml;
+                success = true;
+                console.log(`Successfully loaded ${meetingCount} meetings using proxy ${i + 1}`);
+            } else {
+                throw new Error('No meetings found in the parsed content');
+            }
+
+        } catch (error) {
+            console.error(`Proxy ${i + 1} failed:`, error);
+            continue;
+        }
+    }
+
+    // If all proxies failed, show fallback data
+    if (!success) {
+        console.log('All proxies failed, showing fallback data');
+        const fallbackHtml = `
+            <div class="calendar-item" data-category="council">
+                <div class="calendar-date">
+                    <span class="day">24</span>
+                    <span class="month">Jun</span>
+                </div>
+                <div class="calendar-content">
+                    <h3>Regular City Council Meeting</h3>
+                    <p class="time"><i class="fas fa-clock"></i> 6:00 PM</p>
+                    <div class="calendar-summary">
+                        <p>Please visit the official city website for the most current agenda and meeting information.</p>
+                        <a href="https://berkeleyca.gov/your-government/city-council/city-council-agendas" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Official Calendar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar-item" data-category="council">
+                <div class="calendar-date">
+                    <span class="day">26</span>
+                    <span class="month">Jun</span>
+                </div>
+                <div class="calendar-content">
+                    <h3>Special City Council Meeting</h3>
+                    <p class="time"><i class="fas fa-clock"></i> 6:00 PM</p>
+                    <div class="calendar-summary">
+                        <p>Special meeting agenda will be posted on the official city website.</p>
+                        <a href="https://berkeleyca.gov/your-government/city-council/city-council-agendas" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Check Official Site</a>
+                    </div>
+                </div>
+            </div>
+        `;
+        calendarGrid.innerHTML = fallbackHtml;
+    }
+}
 
 // Contact form handling
 const contactForm = document.querySelector('.contact-form');

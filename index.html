@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Berkeley District 5 - City Council</title>
+    <title>City of Berkeley District 5</title>
     <meta name="description" content="Stay informed about Berkeley District 5. Learn about city council meetings, local businesses, and community issues.">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
             <div class="nav-logo">
                 <div class="logo-container">
                     <img src="ginkgo-leaf.png" alt="Ginkgo Leaf Logo" class="logo-image">
-                    <h2>Berkeley District 5</h2>
+                    <h2>City of Berkeley, District 5</h2>
                 </div>
             </div>
             <ul class="nav-menu">
@@ -27,7 +27,7 @@
                     <a href="#calendar" class="nav-link">Council Calendar</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#spotlight" class="nav-link">Local Spotlight</a>
+                    <a href="#spotlight" class="nav-link">Local Business Spotlight</a>
                 </li>
                 <li class="nav-item">
                     <a href="#community" class="nav-link">Community Voice</a>
@@ -51,8 +51,8 @@
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title">Welcome to Berkeley District 5</h1>
-                <p class="hero-subtitle">Your voice matters. Stay informed about city council meetings, local issues, and community events in your district.</p>
+                <h1 class="hero-title">Welcome to your District 5 site</h1>
+                <p class="hero-subtitle">Your place to stay informed about upcoming city council meetings, local issues, and community events in District 5.</p>
                 <div class="hero-buttons">
                     <button class="btn btn-primary" onclick="scrollToSection('calendar')">View Council Calendar</button>
                     <button class="btn btn-secondary" onclick="scrollToSection('contact')">Share Your Thoughts</button>
@@ -73,7 +73,7 @@
                 <div class="stat-item">
                     <i class="fas fa-calendar-alt"></i>
                     <h3>Next Meeting</h3>
-                    <p>Tuesday, Dec 12</p>
+                    <p>Tuesday, June 24</p>
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-comments"></i>
@@ -96,91 +96,8 @@
             <p class="section-subtitle">Stay up to date with upcoming city council meetings and important dates</p>
             
             <div class="calendar-container">
-                <div class="calendar-filters">
-                    <button class="filter-btn active" data-filter="all">All Events</button>
-                    <button class="filter-btn" data-filter="council">Council Meetings</button>
-                    <button class="filter-btn" data-filter="committee">Committee Meetings</button>
-                    <button class="filter-btn" data-filter="community">Community Events</button>
-                </div>
-                
                 <div class="calendar-grid">
-                    <div class="calendar-item" data-category="council">
-                        <div class="calendar-date">
-                            <span class="day">12</span>
-                            <span class="month">Dec</span>
-                        </div>
-                        <div class="calendar-content">
-                            <h3>Regular City Council Meeting</h3>
-                            <p class="time"><i class="fas fa-clock"></i> 6:00 PM - 9:00 PM</p>
-                            <p class="location"><i class="fas fa-map-marker-alt"></i> City Hall, 2180 Milvia Street</p>
-                            <div class="calendar-summary">
-                                <p>Agenda includes: Housing policy updates, budget review, and public comment on local development projects.</p>
-                                <button class="expand-btn" onclick="toggleExpand(this)">View Full Agenda</button>
-                                <div class="expanded-content">
-                                    <h4>Full Agenda:</h4>
-                                    <ul>
-                                        <li>Public Comment (30 minutes)</li>
-                                        <li>Housing Policy Amendment #2023-12</li>
-                                        <li>Budget Review for Q4 2023</li>
-                                        <li>Development Project: 1234 Telegraph Ave</li>
-                                        <li>Committee Reports</li>
-                                    </ul>
-                                    <a href="#" class="btn btn-primary">Join Meeting</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="calendar-item" data-category="committee">
-                        <div class="calendar-date">
-                            <span class="day">15</span>
-                            <span class="month">Dec</span>
-                        </div>
-                        <div class="calendar-content">
-                            <h3>Planning Commission Meeting</h3>
-                            <p class="time"><i class="fas fa-clock"></i> 7:00 PM - 8:30 PM</p>
-                            <p class="location"><i class="fas fa-map-marker-alt"></i> Virtual Meeting</p>
-                            <div class="calendar-summary">
-                                <p>Discussion of new zoning regulations and development proposals in District 5.</p>
-                                <button class="expand-btn" onclick="toggleExpand(this)">View Details</button>
-                                <div class="expanded-content">
-                                    <h4>Meeting Topics:</h4>
-                                    <ul>
-                                        <li>Zoning Code Updates</li>
-                                        <li>Development Proposals Review</li>
-                                        <li>Public Input Session</li>
-                                    </ul>
-                                    <a href="#" class="btn btn-primary">Join Meeting</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="calendar-item" data-category="community">
-                        <div class="calendar-date">
-                            <span class="day">18</span>
-                            <span class="month">Dec</span>
-                        </div>
-                        <div class="calendar-content">
-                            <h3>District 5 Community Forum</h3>
-                            <p class="time"><i class="fas fa-clock"></i> 2:00 PM - 4:00 PM</p>
-                            <p class="location"><i class="fas fa-map-marker-alt"></i> North Berkeley Senior Center</p>
-                            <div class="calendar-summary">
-                                <p>Open forum for District 5 residents to discuss local concerns and ideas.</p>
-                                <button class="expand-btn" onclick="toggleExpand(this)">View Details</button>
-                                <div class="expanded-content">
-                                    <h4>Forum Topics:</h4>
-                                    <ul>
-                                        <li>Neighborhood Safety</li>
-                                        <li>Local Business Support</li>
-                                        <li>Infrastructure Improvements</li>
-                                        <li>Open Discussion</li>
-                                    </ul>
-                                    <a href="#" class="btn btn-primary">RSVP</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Meeting information will be loaded here automatically -->
                 </div>
             </div>
         </div>
