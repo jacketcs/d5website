@@ -562,4 +562,280 @@ function updateNextMeeting() {
 // Update meeting date on page load
 document.addEventListener('DOMContentLoaded', updateNextMeeting);
 
-console.log('Berkeley District 5 website loaded successfully! 🍃'); 
+console.log('Berkeley District 5 website loaded successfully! 🍃');
+
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+});
+
+// Expand/collapse functionality
+function toggleExpand(button) {
+    const expandedContent = button.nextElementSibling;
+    const isExpanded = expandedContent.classList.contains('active');
+    
+    if (isExpanded) {
+        expandedContent.classList.remove('active');
+        button.textContent = button.textContent.replace('Show Less', 'Learn More');
+    } else {
+        expandedContent.classList.add('active');
+        button.textContent = button.textContent.replace('Learn More', 'Show Less');
+    }
+}
+
+// Calendar functionality
+async function loadCouncilMeetings() {
+    const container = document.getElementById('calendarContainer');
+    if (!container) return;
+
+    try {
+        // Try multiple CORS proxies
+        const proxies = [
+            'https://api.allorigins.win/raw?url=',
+            'https://cors-anywhere.herokuapp.com/',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+
+        let meetings = null;
+        let proxyIndex = 0;
+
+        while (!meetings && proxyIndex < proxies.length) {
+            try {
+                const response = await fetch(proxies[proxyIndex] + 'https://berkeleyca.gov/meetings');
+                if (response.ok) {
+                    const html = await response.text();
+                    meetings = parseMeetingsFromHTML(html);
+                }
+            } catch (error) {
+                console.log(`Proxy ${proxyIndex + 1} failed, trying next...`);
+            }
+            proxyIndex++;
+        }
+
+        if (meetings && meetings.length > 0) {
+            displayMeetings(meetings);
+        } else {
+            showFallbackMessage();
+        }
+    } catch (error) {
+        console.error('Error loading meetings:', error);
+        showFallbackMessage();
+    }
+}
+
+function parseMeetingsFromHTML(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const meetings = [];
+
+    // Look for meeting information in tables or lists
+    const tables = doc.querySelectorAll('table');
+    const lists = doc.querySelectorAll('ul, ol');
+
+    // Process tables
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td, th');
+            if (cells.length >= 2) {
+                const dateText = cells[0]?.textContent?.trim();
+                const titleText = cells[1]?.textContent?.trim();
+                
+                if (dateText && titleText && isMeetingData(dateText, titleText)) {
+                    const meeting = createMeetingObject(dateText, titleText, cells);
+                    if (meeting) meetings.push(meeting);
+                }
+            }
+        });
+    });
+
+    // Process lists
+    lists.forEach(list => {
+        const items = list.querySelectorAll('li');
+        items.forEach(item => {
+            const text = item.textContent.trim();
+            if (isMeetingData(text)) {
+                const meeting = createMeetingObject(text);
+                if (meeting) meetings.push(meeting);
+            }
+        });
+    });
+
+    return meetings.slice(0, 10); // Limit to 10 meetings
+}
+
+function isMeetingData(text, title = '') {
+    const meetingKeywords = ['council', 'meeting', 'agenda', 'session', 'hearing', 'workshop'];
+    const hasMeetingKeyword = meetingKeywords.some(keyword => 
+        text.toLowerCase().includes(keyword) || title.toLowerCase().includes(keyword)
+    );
+    
+    const hasDate = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/i.test(text) ||
+                   /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/.test(text) ||
+                   /\b\d{1,2}-\d{1,2}-\d{2,4}\b/.test(text);
+    
+    return hasMeetingKeyword && hasDate;
+}
+
+function createMeetingObject(dateText, titleText = '', cells = []) {
+    try {
+        // Extract date
+        const dateMatch = dateText.match(/(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
+        if (!dateMatch) return null;
+
+        const month = dateMatch[1];
+        const day = dateMatch[2];
+        const year = dateMatch[3];
+
+        // Extract time if available
+        const timeMatch = dateText.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        const time = timeMatch ? `${timeMatch[1]}:${timeMatch[2]} ${timeMatch[3].toUpperCase()}` : 'TBD';
+
+        // Extract location if available
+        const locationMatch = dateText.match(/(City Hall|Council Chambers|Berkeley)/i);
+        const location = locationMatch ? locationMatch[0] : 'City Hall';
+
+        // Extract agenda link if available
+        let agendaLink = '';
+        if (cells.length > 0) {
+            const linkElement = cells.find(cell => cell.querySelector('a[href*="agenda"]'));
+            if (linkElement) {
+                const link = linkElement.querySelector('a');
+                agendaLink = link.href;
+            }
+        }
+
+        return {
+            date: new Date(`${month} ${day}, ${year}`),
+            title: titleText || 'Berkeley City Council Meeting',
+            time: time,
+            location: location,
+            agendaLink: agendaLink
+        };
+    } catch (error) {
+        console.error('Error creating meeting object:', error);
+        return null;
+    }
+}
+
+function displayMeetings(meetings) {
+    const container = document.getElementById('calendarContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    meetings.forEach(meeting => {
+        const meetingElement = createMeetingElement(meeting);
+        container.appendChild(meetingElement);
+    });
+}
+
+function createMeetingElement(meeting) {
+    const div = document.createElement('div');
+    div.className = 'calendar-item';
+    
+    const month = meeting.date.toLocaleDateString('en-US', { month: 'short' });
+    const day = meeting.date.getDate();
+    
+    div.innerHTML = `
+        <div class="calendar-date">
+            <span class="day">${day}</span>
+            <span class="month">${month}</span>
+        </div>
+        <div class="calendar-content">
+            <h3>${meeting.title}</h3>
+            <div class="time">
+                <i class="fas fa-clock"></i>
+                ${meeting.time}
+            </div>
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                ${meeting.location}
+            </div>
+            <div class="calendar-summary">
+                ${meeting.agendaLink ? 
+                    `<a href="${meeting.agendaLink}" target="_blank" class="btn btn-secondary">View Agenda</a>` :
+                    '<p>Agenda will be posted closer to the meeting date.</p>'
+                }
+            </div>
+        </div>
+    `;
+    
+    return div;
+}
+
+function showFallbackMessage() {
+    const container = document.getElementById('calendarContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="calendar-item">
+            <div class="calendar-date">
+                <span class="day">--</span>
+                <span class="month">--</span>
+            </div>
+            <div class="calendar-content">
+                <h3>Council Meeting Information</h3>
+                <div class="calendar-summary">
+                    <p>Unable to load meeting data automatically. Please visit the official Berkeley City Council website for the most up-to-date meeting information.</p>
+                    <a href="https://berkeleyca.gov/meetings" target="_blank" class="btn btn-secondary">View Official Calendar</a>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            // For now, just reload all meetings since we don't have detailed filtering
+            loadCouncilMeetings();
+        });
+    });
+});
+
+// Load meetings when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadCouncilMeetings();
+});
+
+// Smooth scrolling for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}); 
