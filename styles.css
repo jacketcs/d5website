@@ -203,24 +203,40 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    padding: 40px;
 }
 
 .hero-image img {
-    max-width: 100%;
+    max-width: 85%;
     height: auto;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 50% / 25%;
+    box-shadow: 
+        0 0 50px rgba(0, 129, 185, 0.6),
+        0 0 100px rgba(0, 129, 185, 0.4),
+        0 0 150px rgba(0, 129, 185, 0.2);
     transition: transform 0.3s ease;
+    position: relative;
+    z-index: 2;
+    mask: radial-gradient(ellipse at center, black 60%, transparent 100%);
+    -webkit-mask: radial-gradient(ellipse at center, black 60%, transparent 100%);
+    filter: drop-shadow(0 0 20px rgba(0, 129, 185, 0.3));
 }
 
 .hero-image img:hover {
     transform: scale(1.02);
+    box-shadow: 
+        0 0 60px rgba(0, 129, 185, 0.7),
+        0 0 120px rgba(0, 129, 185, 0.5),
+        0 0 180px rgba(0, 129, 185, 0.3);
+    filter: drop-shadow(0 0 30px rgba(0, 129, 185, 0.5));
 }
 
 .hero-placeholder {
     width: 200px;
     height: auto;
     max-width: 100%;
+    border-radius: 50% / 30%;
 }
 
 /* Quick Stats Section */
