@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berkeley City Council District 5 - Your Government Resource</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=1.4">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -18,102 +18,48 @@
                     <h1 class="hero-title">Welcome to Berkeley District 5</h1>
                 </div>
                 <p class="hero-subtitle">Your starting place for living, growing, and thriving in Berkeley's District 5.</p>
-                <div class="hero-buttons">
-                    <a href="#calendar" class="btn btn-primary">View Council Calendar</a>
-                    <a href="#contact" class="btn btn-secondary">Contact Your Councilmember</a>
-                </div>
-            </div>
-            <div class="hero-features">
-                <div class="feature-grid">
-                    <a href="#spotlight" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <h3>Business Spotlight</h3>
-                        <p>Discover local businesses in District 5</p>
-                    </a>
-                    <a href="#spotlight" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3>Issue Spotlight</h3>
-                        <p>Learn about key district issues</p>
-                    </a>
-                    <a href="#community" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3>Community Voice</h3>
-                        <p>Share your ideas and feedback</p>
-                    </a>
-                    <a href="#contact" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                        <h3>Get Help</h3>
-                        <p>Answers to common city government issues</p>
-                    </a>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Top-Accessed Services -->
-    <section class="services-section">
+    <!-- Quick Access Buttons -->
+    <section class="quick-access">
         <div class="container">
-            <h2 class="section-title">Top-Accessed Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
+            <div class="quick-access-grid">
+                <a href="#issue-spotlight" class="quick-access-btn">
+                    <div class="quick-access-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Issue Spotlight</h3>
+                    <p>Key issues affecting District 5</p>
+                </a>
+                <a href="#council-meetings" class="quick-access-btn">
+                    <div class="quick-access-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <h3>Council Meetings</h3>
-                    <p>View upcoming meetings, agendas, and minutes</p>
-                    <a href="#calendar" class="service-link">View Calendar</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-home"></i>
+                    <p>Upcoming meetings and agendas</p>
+                </a>
+                <a href="#faqs" class="quick-access-btn">
+                    <div class="quick-access-icon">
+                        <i class="fas fa-question-circle"></i>
                     </div>
-                    <h3>Middle Housing</h3>
-                    <p>Learn about housing development opportunities</p>
-                    <a href="#spotlight" class="service-link">Learn More</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Navigating Local Government FAQs</h3>
+                    <p>Common questions and answers</p>
+                </a>
+                <a href="#business-spotlight" class="quick-access-btn">
+                    <div class="quick-access-icon">
+                        <i class="fas fa-store"></i>
                     </div>
-                    <h3>EMBER Fire Safety</h3>
-                    <p>Stay informed about emergency notifications</p>
-                    <a href="#spotlight" class="service-link">Get Alerts</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-anchor"></i>
-                    </div>
-                    <h3>Marina Fees</h3>
-                    <p>Information about marina services and fees</p>
-                    <a href="#spotlight" class="service-link">View Details</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <h3>Constituent Feedback</h3>
-                    <p>Share your thoughts and concerns</p>
-                    <a href="#community" class="service-link">Submit Feedback</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <h3>Contact Councilmember</h3>
-                    <p>Get in touch with your representative</p>
-                    <a href="#contact" class="service-link">Contact Us</a>
-                </div>
+                    <h3>Business Spotlight</h3>
+                    <p>Local businesses in District 5</p>
+                </a>
+
             </div>
         </div>
     </section>
+
+
 
     <!-- Featured Guides -->
     <section class="guides-section">
@@ -156,30 +102,10 @@
         </div>
     </section>
 
-    <!-- Council Meeting Calendar -->
-    <section id="calendar" class="calendar-section">
-        <div class="container">
-            <h2 class="section-title">Council Meeting Calendar</h2>
-            <p class="section-subtitle">Stay informed about upcoming Berkeley City Council meetings and access meeting materials.</p>
-            
-            <div class="calendar-filters">
-                <button class="filter-btn active" data-filter="all">All Meetings</button>
-                <button class="filter-btn" data-filter="regular">Regular Meetings</button>
-                <button class="filter-btn" data-filter="special">Special Meetings</button>
-                <button class="filter-btn" data-filter="workshop">Workshops</button>
-            </div>
-            
-            <div id="calendarContainer" class="calendar-grid">
-                <div class="loading-message">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Loading upcoming meetings...
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Issue Spotlight -->
-    <section id="spotlight" class="spotlight-section">
+    <section id="issue-spotlight" class="spotlight-section">
         <div class="container">
             <h2 class="section-title">Issue Spotlight</h2>
             <p class="section-subtitle">Key issues and initiatives affecting Berkeley District 5 residents.</p>
@@ -269,6 +195,89 @@
                         <p>The city is reviewing marina fee structures to ensure sustainable operations while maintaining accessibility for residents.</p>
                         <p><strong>Public Input:</strong> Share your thoughts on proposed fee changes at upcoming council meetings.</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Council Meetings -->
+    <section id="council-meetings" class="meetings-section">
+        <div class="container">
+            <h2 class="section-title">Council Meetings</h2>
+            <p class="section-subtitle">Stay informed about upcoming Berkeley City Council meetings and access meeting materials.</p>
+            
+            <div class="meetings-grid">
+                <div class="meeting-card">
+                    <div class="meeting-date">
+                        <span class="date-day">15</span>
+                        <span class="date-month">JUL</span>
+                    </div>
+                    <div class="meeting-info">
+                        <h3>Regular City Council Meeting</h3>
+                        <p>6:00 PM - City Hall Council Chambers</p>
+                        <a href="#" class="meeting-link">View Agenda</a>
+                    </div>
+                </div>
+                <div class="meeting-card">
+                    <div class="meeting-date">
+                        <span class="date-day">22</span>
+                        <span class="date-month">JUL</span>
+                    </div>
+                    <div class="meeting-info">
+                        <h3>Special Council Meeting</h3>
+                        <p>4:00 PM - City Hall Council Chambers</p>
+                        <a href="#" class="meeting-link">View Agenda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigating Local Government FAQs -->
+    <section id="faqs" class="faqs-section">
+        <div class="container">
+            <h2 class="section-title">Navigating Local Government FAQs</h2>
+            <p class="section-subtitle">Common questions about Berkeley city government and services.</p>
+            
+            <div class="faqs-grid">
+                <div class="faq-item">
+                    <h3>How do I report a pothole?</h3>
+                    <p>You can report potholes and other street maintenance issues through the City's 311 system or by calling 510-981-2489.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I get a building permit?</h3>
+                    <p>Building permits are issued by the Planning and Development Department. Visit their office at 2120 Milvia Street or call 510-981-7410.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I register to vote?</h3>
+                    <p>You can register to vote online at registertovote.ca.gov or pick up a registration form at any public library or post office.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Spotlight -->
+    <section id="business-spotlight" class="business-section">
+        <div class="container">
+            <h2 class="section-title">Business Spotlight</h2>
+            <p class="section-subtitle">Featured local businesses in Berkeley District 5.</p>
+            
+            <div class="business-grid">
+                <div class="business-card">
+                    <div class="business-image">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3>Local Coffee Shop</h3>
+                    <p>Your neighborhood coffee spot serving locally roasted beans and fresh pastries.</p>
+                    <span class="business-hours">Open Daily 7AM-6PM</span>
+                </div>
+                <div class="business-card">
+                    <div class="business-image">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>District 5 Restaurant</h3>
+                    <p>Farm-to-table dining featuring ingredients from local farms and producers.</p>
+                    <span class="business-hours">Tue-Sun 5PM-10PM</span>
                 </div>
             </div>
         </div>
@@ -378,9 +387,11 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#calendar">Council Meetings</a></li>
-                        <li><a href="#spotlight">Issue Spotlight</a></li>
-                        <li><a href="#community">Community Engagement</a></li>
+                        <li><a href="#issue-spotlight">Issue Spotlight</a></li>
+                        <li><a href="#council-meetings">Council Meetings</a></li>
+                        <li><a href="#faqs">FAQs</a></li>
+                        <li><a href="#business-spotlight">Business Spotlight</a></li>
+                        <li><a href="#calendar">Calendar</a></li>
                         <li><a href="#contact">Contact Us</a></li>
                     </ul>
                 </div>
@@ -412,6 +423,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1.2"></script>
 </body>
 </html> 

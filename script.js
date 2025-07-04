@@ -2,26 +2,32 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+}
 
 // Close mobile menu when clicking on a link
 document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
+    if (hamburger && navMenu) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    }
 }));
 
 // Navbar background change on scroll
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
     }
 });
 
@@ -73,222 +79,12 @@ function toggleExpand(button) {
     }
 }
 
-// Calendar filtering and meeting fetching
+// Load content when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    fetchCouncilMeetings();
-
-    // The old filter logic is removed as the calendar is now populated dynamically.
+    loadContentFromGoogleSheet();
 });
 
-// Function to fetch and display council meetings
-async function fetchCouncilMeetings() {
-    const calendarGrid = document.querySelector('.calendar-grid');
-    if (!calendarGrid) return;
 
-    calendarGrid.innerHTML = '<p class="loading-message" style="text-align: center; width: 100%;">Loading upcoming meetings...</p>';
-
-    // Try multiple CORS proxies in case one fails
-    const proxyUrls = [
-        'https://cors-anywhere.herokuapp.com/',
-        'https://api.allorigins.win/raw?url=',
-        'https://thingproxy.freeboard.io/fetch/'
-    ];
-
-    const targetUrl = 'https://berkeleyca.gov/your-government/city-council/city-council-agendas';
-    let success = false;
-
-    for (let i = 0; i < proxyUrls.length && !success; i++) {
-        try {
-            const proxyUrl = proxyUrls[i];
-            const fullUrl = proxyUrl + (proxyUrl.includes('allorigins') ? encodeURIComponent(targetUrl) : targetUrl);
-            
-            console.log(`Trying proxy ${i + 1}: ${proxyUrl}`);
-            
-            const response = await fetch(fullUrl, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.5',
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const html = await response.text();
-            
-            // Check if we got actual HTML content
-            if (!html.includes('<html') && !html.includes('table')) {
-                throw new Error('Invalid HTML content received');
-            }
-
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // Try different selectors for the meeting table
-            const tableSelectors = [
-                'table.views-table tbody tr',
-                'table tbody tr',
-                '.views-table tbody tr',
-                'tr'
-            ];
-
-            let meetingRows = [];
-            for (const selector of tableSelectors) {
-                meetingRows = doc.querySelectorAll(selector);
-                if (meetingRows.length > 0) {
-                    console.log(`Found ${meetingRows.length} rows with selector: ${selector}`);
-                    break;
-                }
-            }
-
-            let meetingsHtml = '';
-            let meetingCount = 0;
-
-            meetingRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length < 2) return;
-
-                const titleElement = cells[0].querySelector('a');
-                const title = titleElement ? titleElement.textContent.trim() : cells[0].textContent.trim();
-                
-                const dateStr = cells[1].textContent.trim();
-
-                // Look for agenda links in all columns, not just the third one
-                let agendaLinkElement = null;
-                let agendaUrl = '#';
-                
-                // First, try to find HTML agenda links
-                for (let i = 0; i < cells.length; i++) {
-                    const htmlLink = cells[i].querySelector('a[href*="html" i]');
-                    if (htmlLink) {
-                        agendaLinkElement = htmlLink;
-                        break;
-                    }
-                }
-                
-                // If no HTML link found, look for any agenda-related link
-                if (!agendaLinkElement) {
-                    for (let i = 0; i < cells.length; i++) {
-                        const anyLink = cells[i].querySelector('a');
-                        if (anyLink && (anyLink.textContent.toLowerCase().includes('agenda') || 
-                                       anyLink.getAttribute('href').toLowerCase().includes('agenda'))) {
-                            agendaLinkElement = anyLink;
-                            break;
-                        }
-                    }
-                }
-                
-                // If still no agenda link, look for any link that might be an agenda
-                if (!agendaLinkElement) {
-                    for (let i = 0; i < cells.length; i++) {
-                        const anyLink = cells[i].querySelector('a');
-                        if (anyLink && anyLink.getAttribute('href')) {
-                            agendaLinkElement = anyLink;
-                            break;
-                        }
-                    }
-                }
-
-                // Construct the agenda URL
-                if (agendaLinkElement) {
-                    const href = agendaLinkElement.getAttribute('href');
-                    if (href) {
-                        if (href.startsWith('http')) {
-                            agendaUrl = href;
-                        } else if (href.startsWith('/')) {
-                            agendaUrl = `https://berkeleyca.gov${href}`;
-                        } else {
-                            agendaUrl = `https://berkeleyca.gov/${href}`;
-                        }
-                        console.log(`Found agenda link: ${agendaUrl}`);
-                    }
-                }
-
-                if (title && dateStr) {
-                    // Parse the date string (format: MM/DD/YYYY - HH:MM AM/PM)
-                    const dateMatch = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-                    if (dateMatch) {
-                        const [, month, day, year] = dateMatch;
-                        const monthName = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`).toLocaleString('en-US', { month: 'short' });
-                        
-                        // Extract time if available
-                        const timeMatch = dateStr.match(/- (.+)$/);
-                        const time = timeMatch ? timeMatch[1].trim() : 'Time TBD';
-
-                        meetingsHtml += `
-                            <div class="calendar-item" data-category="council">
-                                <div class="calendar-date">
-                                    <span class="day">${day}</span>
-                                    <span class="month">${monthName}</span>
-                                </div>
-                                <div class="calendar-content">
-                                    <h3>${title}</h3>
-                                    <p class="time"><i class="fas fa-clock"></i> ${time}</p>
-                                    <div class="calendar-summary">
-                                        ${agendaUrl !== '#' ? `<a href="${agendaUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Agenda</a>` : '<span class="btn btn-secondary">Agenda TBD</span>'}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        meetingCount++;
-                    }
-                }
-            });
-
-            if (meetingCount > 0) {
-                calendarGrid.innerHTML = meetingsHtml;
-                success = true;
-                console.log(`Successfully loaded ${meetingCount} meetings using proxy ${i + 1}`);
-            } else {
-                throw new Error('No meetings found in the parsed content');
-            }
-
-        } catch (error) {
-            console.error(`Proxy ${i + 1} failed:`, error);
-            continue;
-        }
-    }
-
-    // If all proxies failed, show fallback data
-    if (!success) {
-        console.log('All proxies failed, showing fallback data');
-        const fallbackHtml = `
-            <div class="calendar-item" data-category="council">
-                <div class="calendar-date">
-                    <span class="day">24</span>
-                    <span class="month">Jun</span>
-                </div>
-                <div class="calendar-content">
-                    <h3>Regular City Council Meeting</h3>
-                    <p class="time"><i class="fas fa-clock"></i> 6:00 PM</p>
-                    <div class="calendar-summary">
-                        <p>Please visit the official city website for the most current agenda and meeting information.</p>
-                        <a href="https://berkeleyca.gov/your-government/city-council/city-council-agendas" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Official Calendar</a>
-                    </div>
-                </div>
-            </div>
-            <div class="calendar-item" data-category="council">
-                <div class="calendar-date">
-                    <span class="day">26</span>
-                    <span class="month">Jun</span>
-                </div>
-                <div class="calendar-content">
-                    <h3>Special City Council Meeting</h3>
-                    <p class="time"><i class="fas fa-clock"></i> 6:00 PM</p>
-                    <div class="calendar-summary">
-                        <p>Special meeting agenda will be posted on the official city website.</p>
-                        <a href="https://berkeleyca.gov/your-government/city-council/city-council-agendas" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Check Official Site</a>
-                    </div>
-                </div>
-            </div>
-        `;
-        calendarGrid.innerHTML = fallbackHtml;
-    }
-}
 
 // Contact form handling
 const contactForm = document.querySelector('.contact-form');
@@ -838,4 +634,168 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+});
+
+// Content Management System - Google Sheets Integration
+async function loadContentFromGoogleSheet() {
+    try {
+        // Use CSV format instead of JSON - more reliable
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vThUrQ6pZlVQGT8z6-yJBBWJwIkJL6usyXrdzW8QIjI9IzU-yqjIaXUEH9G69EfVAaZ3sY_TsGSUdJn/pub?output=csv';
+        
+        console.log('Fetching content from Google Sheet...');
+        console.log('URL:', sheetUrl);
+        
+        const response = await fetch(sheetUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const csvText = await response.text();
+        console.log('CSV data received:', csvText);
+        
+        const contentMap = {};
+        
+        // Parse CSV data with proper quoted content handling
+        const lines = csvText.split('\n');
+        for (let i = 1; i < lines.length; i++) { // Skip header row
+            const line = lines[i].trim();
+            if (!line) continue;
+            
+            // Parse CSV with proper quote handling
+            const columns = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let j = 0; j < line.length; j++) {
+                const char = line[j];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    columns.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            columns.push(current.trim()); // Add the last column
+            
+            if (columns.length >= 2) {
+                const section = columns[0].replace(/^"|"$/g, '');
+                const content = columns[1].replace(/^"|"$/g, '');
+                
+                if (section && content) {
+                    contentMap[section] = content;
+                    console.log(`Loaded: ${section} = ${content}`);
+                }
+            }
+        }
+        
+        console.log('Content map:', contentMap);
+        
+        // Update the website content
+        updateWebsiteContent(contentMap);
+        
+    } catch (error) {
+        console.error('Error loading content from Google Sheet:', error);
+        // Fallback to default content
+    }
+}
+
+function updateWebsiteContent(contentMap) {
+    console.log('Updating website content with:', contentMap);
+    
+    // Update hero section
+    if (contentMap.hero_subtitle) {
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        if (heroSubtitle) {
+            console.log('Updating hero subtitle from:', heroSubtitle.textContent, 'to:', contentMap.hero_subtitle);
+            heroSubtitle.textContent = contentMap.hero_subtitle;
+        } else {
+            console.log('Hero subtitle element not found');
+        }
+    } else {
+        console.log('No hero_subtitle found in content map');
+    }
+    
+    // Update issue spotlight content
+    if (contentMap.issue_1_title) {
+        const issue1Title = document.querySelector('#issue-spotlight .spotlight-card:nth-child(1) h3');
+        if (issue1Title) {
+            issue1Title.textContent = contentMap.issue_1_title;
+        }
+    }
+    
+    if (contentMap.issue_1_description) {
+        const issue1Desc = document.querySelector('#issue-spotlight .spotlight-card:nth-child(1) .spotlight-description');
+        if (issue1Desc) {
+            issue1Desc.textContent = contentMap.issue_1_description;
+        }
+    }
+    
+    if (contentMap.issue_2_title) {
+        const issue2Title = document.querySelector('#issue-spotlight .spotlight-card:nth-child(2) h3');
+        if (issue2Title) {
+            issue2Title.textContent = contentMap.issue_2_title;
+        }
+    }
+    
+    if (contentMap.issue_2_description) {
+        const issue2Desc = document.querySelector('#issue-spotlight .spotlight-card:nth-child(2) .spotlight-description');
+        if (issue2Desc) {
+            issue2Desc.textContent = contentMap.issue_2_description;
+        }
+    }
+    
+    // Update contact information
+    if (contentMap.contact_phone) {
+        const contactPhone = document.querySelector('.help-card:nth-child(1) p');
+        if (contactPhone) {
+            contactPhone.textContent = contentMap.contact_phone;
+        }
+    }
+    
+    if (contentMap.contact_email) {
+        const contactEmail = document.querySelector('.help-card:nth-child(2) .help-link');
+        if (contactEmail) {
+            contactEmail.href = `mailto:${contentMap.contact_email}`;
+            contactEmail.textContent = contentMap.contact_email;
+        }
+    }
+    
+    // Update office hours
+    if (contentMap.office_hours) {
+        const officeHours = document.querySelector('.help-card:nth-child(1) .hours');
+        if (officeHours) {
+            officeHours.innerHTML = contentMap.office_hours.replace(/\n/g, '<br>');
+        }
+    }
+    
+    // Update community ideas
+    if (contentMap.community_idea_1) {
+        const idea1 = document.querySelector('.community-card:nth-child(1) blockquote');
+        if (idea1) {
+            idea1.textContent = contentMap.community_idea_1;
+        }
+    }
+    
+    if (contentMap.community_idea_2) {
+        const idea2 = document.querySelector('.community-card:nth-child(2) blockquote');
+        if (idea2) {
+            idea2.textContent = contentMap.community_idea_2;
+        }
+    }
+    
+    if (contentMap.community_idea_3) {
+        const idea3 = document.querySelector('.community-card:nth-child(3) blockquote');
+        if (idea3) {
+            idea3.textContent = contentMap.community_idea_3;
+        }
+    }
+}
+
+// Load content when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fetchCouncilMeetings();
+    loadContentFromGoogleSheet();
 }); 
